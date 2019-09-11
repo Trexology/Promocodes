@@ -210,7 +210,7 @@ class Promocodes extends Model
 	public function apply($code, $hard_check = false)
 	{
 		$record = Promocodes::where('code', $code)
-		// ->whereNull('is_used')
+		->whereNull('is_used')
 		->where('quantity', '!=' , 0) // -1 for infinite
 		->where(function($q) {
 					 $q->whereDate('expiry_date', '<' , Carbon::today())
@@ -222,7 +222,7 @@ class Promocodes extends Model
 			if ($record->quantity > 0) {
 				$record->quantity--;
 			}
-			// $record->is_used = date('Y-m-d H:i:s');
+			$record->is_used = Carbon::now();
 
 			if ($record->save()) {
 				if ($hard_check) {
